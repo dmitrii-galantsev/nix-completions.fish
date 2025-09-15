@@ -22,7 +22,8 @@ function __nix_complete_profile_rm --description 'Remove a profile'
         return 1
     end
 
-    set -l packages (nix profile list --json | jq '.elements | .[] | .attrPath' -r | grep -Po '(?<=\.)[^.]+$')
+    # must hide errors from nix command because it breaks completions
+    set -l packages (nix profile list --json 2>/dev/null | jq '.elements | .[] | .attrPath' -r | grep -Po '(?<=\.)[^.]+$')
     for k in $packages
         echo "$k"
     end
